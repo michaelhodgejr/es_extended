@@ -49,74 +49,83 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 		-- Get inventory
 		table.insert(tasks, function(cb)
 
-			MySQL.Async.fetchAll('SELECT * FROM `user_inventory` WHERE `identifier` = @identifier', {
-				['@identifier'] = player.getIdentifier()
-			}, function(inventory)
+			MySQL.Async.fetchAll('SELECT active_char_id FROM users WHERE identifier = @identifier', {
+			  ['@identifier'] = player.getIdentifier()
+			}, function(user)
+				active_char_id = user[1].active_char_id
 
-				local tasks2 = {}
+				MySQL.Async.fetchAll('SELECT * FROM `character_inventory` WHERE skin_id = @skin_id AND identifier = @identifier', {
+					['@skin_id'] = active_char_id,
+					['@identifier'] = player.getIdentifier()
+				}, function(inventory)
 
-				for i=1, #inventory, 1 do
-					table.insert(userData.inventory, {
-						name      = inventory[i].item,
-						count     = inventory[i].count,
-						label     = ESX.Items[inventory[i].item].label,
-						limit     = ESX.Items[inventory[i].item].limit,
-						usable    = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
-						rare      = ESX.Items[inventory[i].item].rare,
-						canRemove = ESX.Items[inventory[i].item].canRemove
-					})
-				end
+					local tasks2 = {}
 
-				for k,v in pairs(ESX.Items) do
-					local found = false
-
-					for j=1, #userData.inventory, 1 do
-						if userData.inventory[j].name == k then
-							found = true
-							break
-						end
-					end
-
-					if not found then
-
+					for i=1, #inventory, 1 do
 						table.insert(userData.inventory, {
-							name      = k,
-							count     = 0,
-							label     = ESX.Items[k].label,
-							limit     = ESX.Items[k].limit,
-							usable    = ESX.UsableItemsCallbacks[k] ~= nil,
-							rare      = ESX.Items[k].rare,
-							canRemove = ESX.Items[k].canRemove
+							name      = inventory[i].item,
+							count     = inventory[i].count,
+							label     = ESX.Items[inventory[i].item].label,
+							limit     = ESX.Items[inventory[i].item].limit,
+							usable    = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
+							rare      = ESX.Items[inventory[i].item].rare,
+							canRemove = ESX.Items[inventory[i].item].canRemove
 						})
+					end
 
-						local scope = function(item, identifier)
+					for k,v in pairs(ESX.Items) do
+						local found = false
 
-							table.insert(tasks2, function(cb2)
-								MySQL.Async.execute('INSERT INTO user_inventory (identifier, item, count) VALUES (@identifier, @item, @count)',
-								{
-									['@identifier'] = identifier,
-									['@item']       = item,
-									['@count']      = 0
-								}, function(rowsChanged)
-									cb2()
+						for j=1, #userData.inventory, 1 do
+							if userData.inventory[j].name == k then
+								found = true
+								break
+							end
+						end
+
+						if not found then
+
+							table.insert(userData.inventory, {
+								name      = k,
+								count     = 0,
+								label     = ESX.Items[k].label,
+								limit     = ESX.Items[k].limit,
+								usable    = ESX.UsableItemsCallbacks[k] ~= nil,
+								rare      = ESX.Items[k].rare,
+								canRemove = ESX.Items[k].canRemove
+							})
+
+							local scope = function(item, identifier)
+
+								table.insert(tasks2, function(cb2)
+									MySQL.Async.execute('INSERT INTO character_inventory (identifier, item, count, skin_id) VALUES (@identifier, @item, @count, @skin_id)',
+									{
+										['@identifier'] = identifier,
+										['@item']       = item,
+										['@count']      = 0,
+										['@skin_id']      = active_char_id,
+									}, function(rowsChanged)
+										cb2()
+									end)
 								end)
-							end)
+
+							end
+
+							scope(k, player.getIdentifier())
 
 						end
 
-						scope(k, player.getIdentifier())
-
 					end
 
-				end
+					Async.parallelLimit(tasks2, 5, function(results) end)
 
-				Async.parallelLimit(tasks2, 5, function(results) end)
+					table.sort(userData.inventory, function(a,b)
+						return a.label < b.label
+					end)
 
-				table.sort(userData.inventory, function(a,b)
-					return a.label < b.label
+					cb()
 				end)
 
-				cb()
 			end)
 
 		end)
@@ -221,6 +230,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					inventory    = xPlayer.getInventory(),
 					job          = xPlayer.getJob(),
 					loadout      = xPlayer.getLoadout(),
+					active_char_id = xPlayer.active_char_id,
 					lastPosition = xPlayer.getLastPosition(),
 					money        = xPlayer.get('money')
 				})
