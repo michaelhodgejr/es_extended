@@ -69,7 +69,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.fetchAll('SELECT active_char_id FROM users WHERE identifier = @identifier', {
-					['@identifier'] = xplayer.getIdentifier()
+					['@identifier'] = xPlayer.identifier
 				}, function(user)
 					active_char_id = user[1].active_char_id
 

@@ -10,3 +10,5 @@ CREATE TABLE `character_inventory` (
 
 ALTER TABLE `users` ADD COLUMN `active_char_id` INT(11) NULL DEFAULT NULL;
 ALTER TABLE `users` ADD INDEX `active_char_id` (`active_char_id`);
+
+UPDATE users SET active_char_id = (SELECT id FROM skins WHERE active = 1 AND identifier = users.identifier)

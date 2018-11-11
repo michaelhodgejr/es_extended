@@ -184,7 +184,9 @@ AddEventHandler('esx:addInventoryItem', function(item, count)
 		end
 	end
 
-	ESX.UI.ShowInventoryItemNotification(true, item, count)
+	if count > 0 then
+	  ESX.UI.ShowInventoryItemNotification(true, item, count)
+	end
 
 	if ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 		ESX.ShowInventory()
@@ -199,7 +201,9 @@ AddEventHandler('esx:removeInventoryItem', function(item, count)
 		end
 	end
 
-	ESX.UI.ShowInventoryItemNotification(false, item, count)
+	if count > 0 then
+	  ESX.UI.ShowInventoryItemNotification(false, item, count)
+	end
 
 	if ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 		ESX.ShowInventory()
