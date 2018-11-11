@@ -94,18 +94,40 @@ ESX.SavePlayer = function(xPlayer, cb)
 
 	end
 
-	-- Job, loadout and position
+	-- Job and position and loadout for simplification purposes
 	table.insert(asyncTasks, function(cb)
-		MySQL.Async.execute('UPDATE users SET `job` = @job, `job_grade` = @job_grade, `loadout` = @loadout, `position` = @position WHERE identifier = @identifier',
+		MySQL.Async.execute('UPDATE users SET `job` = @job, `loadout` = @loadout, `job_grade` = @job_grade, `position` = @position WHERE identifier = @identifier',
 		{
 			['@job']        = xPlayer.job.name,
 			['@job_grade']  = xPlayer.job.grade,
-			['@loadout']    = json.encode(xPlayer.loadout),
+			['@loadout']   = json.encode(xPlayer.loadout),
 			['@position']   = json.encode(xPlayer.lastPosition),
 			['@identifier'] = xPlayer.identifier
 		}, function(rowsChanged)
 			cb()
 		end)
+	end)
+
+	-- Loadout
+	table.insert(asyncTasks, function(cb)
+
+				MySQL.Async.fetchAll('SELECT active_char_id FROM users WHERE identifier = @identifier', {
+					['@identifier'] = xPlayer.identifier
+				}, function(user)
+	  				 active_char_id = user[1].active_char_id
+
+						MySQL.Async.execute('UPDATE skins SET `loadout` = @loadout WHERE identifier = @identifier AND id = @skin_id AND active = 1',
+							{
+								['@loadout'] = json.encode(xPlayer.loadout),
+								['@skin_id'] = active_char_id,
+								['@identifier'] = xPlayer.identifier
+							}, 
+							function(rowsChanged)
+								cb()
+							end
+						)
+
+					end)
 	end)
 
 	Async.parallel(asyncTasks, function(results)

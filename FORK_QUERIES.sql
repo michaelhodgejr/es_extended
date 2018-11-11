@@ -8,7 +8,9 @@ CREATE TABLE `character_inventory` (
 	INDEX `skin_id` (`skin_id`)
 );
 
-ALTER TABLE `users` ADD COLUMN `active_char_id` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `users` ADD COLUMN `active_char_id` TEXT NULL DEFAULT NULL;
 ALTER TABLE `users` ADD INDEX `active_char_id` (`active_char_id`);
+ALTER TABLE `skins` ADD COLUMN `loadout` TEXT NULL AFTER `identifier`;
 
-UPDATE users SET active_char_id = (SELECT id FROM skins WHERE active = 1 AND identifier = users.identifier)
+UPDATE users SET active_char_id = (SELECT id FROM skins WHERE active = 1 AND identifier = users.identifier);
+UPDATE skins SET loadout = '[]';
