@@ -11,6 +11,10 @@ CREATE TABLE `character_inventory` (
 ALTER TABLE `users` ADD COLUMN `active_char_id` TEXT NULL DEFAULT NULL;
 ALTER TABLE `users` ADD INDEX `active_char_id` (`active_char_id`);
 ALTER TABLE `skins` ADD COLUMN `loadout` TEXT NULL AFTER `identifier`;
+ALTER TABLE `skins` ADD COLUMN `job` VARCHAR(250) NULL AFTER `identifier`;
+ALTER TABLE `skins` ADD COLUMN `job_grade` int NULL AFTER `identifier`;
 
 UPDATE users SET active_char_id = (SELECT id FROM skins WHERE active = 1 AND identifier = users.identifier);
-UPDATE skins SET loadout = '[]';
+UPDATE skins SET loadout = '[]', job_grade = 0, job = 'unemployed';
+
+

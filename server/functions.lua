@@ -108,7 +108,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 		end)
 	end)
 
-	-- Loadout
+	-- Loadout and Job
 	table.insert(asyncTasks, function(cb)
 
 				MySQL.Async.fetchAll('SELECT active_char_id FROM users WHERE identifier = @identifier', {
@@ -116,9 +116,11 @@ ESX.SavePlayer = function(xPlayer, cb)
 				}, function(user)
 	  				 active_char_id = user[1].active_char_id
 
-						MySQL.Async.execute('UPDATE skins SET `loadout` = @loadout WHERE identifier = @identifier AND id = @skin_id AND active = 1',
+						MySQL.Async.execute('UPDATE skins SET `loadout` = @loadout, `job` = @job, `job_grade` = @job_grade WHERE identifier = @identifier AND id = @skin_id AND active = 1',
 							{
 								['@loadout'] = json.encode(xPlayer.loadout),
+								['@job']        = xPlayer.job.name,
+								['@job_grade']  = xPlayer.job.grade,
 								['@skin_id'] = active_char_id,
 								['@identifier'] = xPlayer.identifier
 							}, 
