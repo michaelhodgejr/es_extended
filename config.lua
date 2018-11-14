@@ -1,17 +1,13 @@
 Config                          = {}
-Config.Locale                   = 'sv'
-
+Config.MaxPlayers               = 32
 Config.Accounts                 = { 'bank', 'black_money' }
-Config.AccountLabels            = { bank = _U('bank'), black_money = _U('black_money') }
-
-Config.EnableSocietyPayouts     = false -- pay from the society account that the plyayers are employeed at instead of plain giving money. Requirement: esx_society
+--Config.AccountLabels            = { bank = 'Banque', black_money = 'Argent Sale' } -- French
+Config.AccountLabels            = { bank = 'Bank', black_money = 'Dirty Money' } -- English
+Config.PaycheckInterval         = 7 * 60000
 Config.ShowDotAbovePlayer       = false
 Config.DisableWantedLevel       = true
+Config.RemoveInventoryItemDelay = 0 * 60000
 Config.EnableWeaponPickup       = true
-Config.EnableHud                = true -- enable the default hud? Display current job and accounts (black, bank & cash)
-
-Config.RemoveInventoryItemDelay = 5 * 60000
-Config.PaycheckInterval         = 7 * 60000
-Config.MaxPlayers               = 32
-
+Config.Locale                   = 'en'
 Config.EnableDebug              = false
+

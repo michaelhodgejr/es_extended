@@ -1,44 +1,57 @@
 # es_extended
-es_extended is a roleplay framework for FiveM. It is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the **Es**sentialMode **E**xtended framework for FiveM.
+FXServer ES Extended
 
-### Links & Read more
-- [ESX Documentation](https://esx-org.github.io/) (incomplete)
-- [ES Documentation](https://docs.essentialmode.com/)
-- [FiveM Forum Thread](https://forum.fivem.net/t/release-esx-base/39881)
-- [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
+## DISCORD
 
-### Screenshot preview (todo)
+https://discord.me/fivem_esx
+
+## SCREENSHOT
 
 ![screenshot](http://i.imgur.com/aPFdJl3.jpg)
 
-### Features
-- Accounts (bank / black money). You can add further accounts
-- Advanced inventory system (press `F2` ingame)
-- Job system
-- Loadouts and position synced in database
-- The best framework out there for RP servers
-- i18n (locale) system
-- Plenty of plugins available
+## DESCRIPTION
 
-### Requirements
-This order also applies in the startup order.
-- Base events
-- [mysql-async](https://github.com/brouznouf/fivem-mysql-async)
-- [essentialmode](https://github.com/kanersps/essentialmode)
-- [esplugin_mysql](https://github.com/kanersps/esplugin_mysql)
-- [async](https://github.com/ESX-Org/async)
+Add support for accounts (bank / black money) you can also add others accounts
 
-### Download & Installation
+Add support for inventory (press F2 ingame) => Players can now remove items from inventory
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
+Add support for jobs
+
+Loadouts are saved in database and restored on spawn
+
+Positions are saved in database and restored on spawn
+
+## Requirements
+
+- **essentialmode** + **es_admin** => https://forum.fivem.net/t/release-essentialmode-base/3665
+- **esplugin_mysql** => https://forum.fivem.net/t/release-essentialmode-base/3665/1181
+- **mysql-async** => https://github.com/brouznouf/fivem-mysql-async/releases/latest
+- **async** => https://github.com/esx-org/async/releases/latest
+
+## Download
+
+**1) Using [fvm](https://github.com/qlaffont/fvm-installer)**
+
 ```
 fvm install --save --folder=essential esx-org/es_extended
 fvm install --save --folder=esx esx-org/esx_menu_default
 fvm install --save --folder=esx esx-org/esx_menu_dialog
 fvm install --save --folder=esx esx-org/esx_menu_list
+
 ```
 
-### Using Git
+**2) Manually**
+
+- Download https://github.com/ESX-Org/es_extended/releases/latest
+- Put it in resource/[essential] directory
+- Download https://github.com/ESX-Org/esx_menu_default/releases/latest
+- Put it in resource/[esx] directory
+- Download https://github.com/ESX-Org/esx_menu_dialog/releases/latest
+- Put it in resource/[esx] directory
+- Download https://github.com/ESX-Org/esx_menu_list/releases/latest
+- Put it in resource/[esx] directory
+
+**3) Using git**
 
 ```
 cd resources
@@ -48,41 +61,15 @@ git clone https://github.com/ESX-Org/esx_menu_dialog [esx]/[ui]/esx_menu_dialog
 git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 ```
 
-### Manually
-- Download https://github.com/ESX-Org/es_extended/releases/latest
-- Put it in the `resource/[essential]` directory
-- Download https://github.com/ESX-Org/esx_menu_default/releases/latest
-- Put it in the `resource/[esx]/[ui]` directory
-- Download https://github.com/ESX-Org/esx_menu_dialog/releases/latest
-- Put it in the `resource/[esx]/[ui]` directory
-- Download https://github.com/ESX-Org/esx_menu_list/releases/latest
-- Put it in the `resource/[esx]/[ui]` directory
-
 ## Installation
-- Import `es_extended.sql` in your database
-- Configure your `server.cfg` to look like this
+
+1) Import es_extended.sql in your database
+2) Add this in your server.cfg :
 
 ```
-start baseevents
-
-start mysql-async
-start essentialmode
-start esplugin_mysql
-
 start es_extended
 
 start esx_menu_default
 start esx_menu_list
 start esx_menu_dialog
 ```
-# Legal
-### License
-es_extended - EssentialMode Extended framework for FiveM
-
-Copyright (C) 2015-2018 Jérémie N'gadi
-
-This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
-
-This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
-
-You should have received a copy Of the GNU General Public License along with this program. If Not, see http://www.gnu.org/licenses/.
